@@ -1,48 +1,3 @@
-# import math
-# from datetime import datetime
-#
-# from loader import conn
-# from utils.commands import find_exist_tg_user
-# from utils.db_api.schemas.customer import telegram_user
-# from utils.db_api.schemas.orders import curr_order
-#
-# a = 1
-# b = 'false' if a == 0 else 'true'
-# c = math.floor((a / 5) * 0.5)
-# print(c)
-#
-# def find_exist_tg_user(msg_tgid):
-#     find_exist_tg_user = telegram_user.select().where(telegram_user.c.tg_id == msg_tgid)
-#     exist_tg_user = conn.execute(find_exist_tg_user).first()
-#     return exist_tg_user
-#
-# def get_curr_user_order(msg_tgid):
-#     exist_tg_user = find_exist_tg_user(msg_tgid)
-#     exist_card_id = exist_tg_user[1]
-#
-#     get_exist_user_order = curr_order.select().where(curr_order.c.card_id == exist_card_id)
-#     exist_user_order = conn.execute(get_exist_user_order).first()
-#     place = exist_user_order[1]
-#     hookah = exist_user_order[2]
-#     open_order_time = exist_user_order[3]
-#     tariff = exist_user_order[4]
-#     duration = math.ceil(((datetime.now() - open_order_time).total_seconds())/60)
-#
-#     return place,hookah,duration,tariff
-# try:
-#     print(get_curr_user_order(305398726))
-# except Exception as err:
-#     print(err)
-#
-#
-
-#
-# a = [(8883, '1t', True, 2, 'min'), (6458, '1t', True, 2, 'min')]
-# lena = len(a)
-#
-# for i in range(lena):
-#     print(a[i][0])
-
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.utils import executor
@@ -90,10 +45,32 @@ async def echo(msg: types.Message):
     print(answerss)
     await msg.answer(answerss)
 
+URL_APP = 'http://v1772047.hosted-by-vdsina.ru/'
+WEBAPP_HOST = '0.0.0.0'
+WEBAPP_PORT = 5000
+
+async def onstartup(dp):
+    try:
+        await bot.set_webhook(URL_APP)
+        print('Бот запущен')
+    except Exception:
+        print('ERROR')
+
+
+async def onshutdown(dp):
+    print('Bot closed')
+    await bot.delete_webhook()
+
 
 if __name__ == '__main__':
-    try:
-        executor.start_polling(dp, on_startup=on_startup, skip_updates=True, timeout=200000)
-    except Exception as err:
-        executor.start_polling(dp, on_startup=on_startup, skip_updates=True, timeout=200000)
-        print(err)
+    executor.start_webhook(
+        dispatcher=dp,
+        webhook_path='',
+        skip_updates=True,
+        on_startup=onstartup,
+        on_shutdown=onshutdown,
+        host=WEBAPP_HOST,
+        port=WEBAPP_PORT,
+    )
+
+
