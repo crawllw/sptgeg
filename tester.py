@@ -6,7 +6,7 @@ from aiogram.utils import executor
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy import Table, Column, Integer, String, ForeignKey, Boolean, DateTime
 
-BOT_TOKEN = str("6279958249:AAFHXoApNlUhO3kbm8qnfYRVy58kn9dCRt0")
+BOT_TOKEN = str("")
 
 storage = MemoryStorage()
 bot = Bot(token=BOT_TOKEN, parse_mode=types.ParseMode.HTML)
